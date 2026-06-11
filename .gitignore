@@ -1,0 +1,29 @@
+# Secrets -- never commit
+.env
+
+# Instructor-only files -- released after each session
+# To release: git add -f s0X/solution/ && git add -f s0X/instructor_notes.md
+s*/solution/
+s*/instructor_notes.md
+
+# Generated files -- recreate with seed.py and ingest.py
+data/bnb_data.db
+data/vectorstore/
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# Test cache
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Editor
+.vscode/settings.json
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
