@@ -9,6 +9,35 @@ compliance filtering, LangSmith observability, and a Docker deployment.
 
 ---
 
+## Getting Started
+
+**Step 1 -- Fork this repo** (click Fork at the top right on GitHub). This gives you your own copy where you can save your work.
+
+**Step 2 -- Clone your fork** (replace `YOUR_USERNAME` with your GitHub username):
+```
+git clone https://github.com/YOUR_USERNAME/wealthdesk.git
+cd wealthdesk
+```
+
+**Step 3 -- Add the instructor repo as upstream** so you can pull new session files before each class:
+```
+git remote add upstream https://github.com/ketanvj/wealthdesk.git
+```
+
+**Before each session**, pull the latest starter files:
+```
+git pull upstream main
+```
+
+**After working in class**, save your code to your fork:
+```
+git add .
+git commit -m "Session X work"
+git push
+```
+
+---
+
 ## What You Need Before Session 1
 
 1. Python 3.11 or later
