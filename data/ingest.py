@@ -3,7 +3,7 @@ data/ingest.py
 --------------
 Ingests BNB policy documents into ChromaDB.
 
-Run after seed.py:
+Run independently of seed.py (no dependency between them):
     python data/ingest.py
 
 What this script does:
@@ -139,10 +139,16 @@ def main() -> None:
     VECTOR_DIR.mkdir(parents=True, exist_ok=True)
 
     print("Building vector store...")
+    # collection_metadata sets the distance metric used by ChromaDB's HNSW index.
+    # "cosine" produces relevance scores in a 0–1 range where higher = more similar,
+    # which is intuitive and maps well to a score threshold like 0.4.
+    # The default ("l2", L2 Euclidean distance) produces much lower scores for the
+    # same queries, making thresholds hard to reason about.
     Chroma.from_documents(
         documents=chunks,
         embedding=embeddings,
         persist_directory=str(VECTOR_DIR),
+        collection_metadata={"hnsw:space": "cosine"},
     )
 
     print(f"\nDone. {len(chunks)} chunks stored at {VECTOR_DIR}")

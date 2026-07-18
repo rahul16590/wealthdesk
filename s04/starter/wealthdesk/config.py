@@ -36,9 +36,13 @@ CLASSIFY_SYSTEM = """You are a query classifier for WealthDesk, the BNB banking 
 
 Classify the customer's query into exactly one category:
 
-SIMPLE       : A direct factual question about a specific BNB product, rate, fee, or policy.
+SIMPLE       : A direct factual question about BNB products, rates, fees, policies,
+               required documents, application process steps, or an overview of BNB's offerings.
+               Examples: "What is the home loan rate?", "What documents do I need for a home loan?",
+                         "What products does BNB offer?"
 COMPLEX      : A question requiring product comparison, personal eligibility assessment,
                financial planning advice, or a recommendation across multiple options.
+               Examples: "Which loan is best for me?", "Can I afford a home loan on my salary?"
 OUT_OF_SCOPE : A request unrelated to BNB banking products and services.
 
 Reply with exactly one word: SIMPLE, COMPLEX, or OUT_OF_SCOPE. No explanation."""

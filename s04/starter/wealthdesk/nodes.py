@@ -50,7 +50,7 @@ def classify(state: WealthDeskState) -> dict:
     except Exception as e:
         print(f"[WealthDesk] Classification error: {e}")
         query_type = "SIMPLE"
-    return {"query_type": query_type}
+    return {"query_type": query_type, "retrieved_docs": []}
 
 
 def retrieve_docs(state: WealthDeskState) -> dict:
