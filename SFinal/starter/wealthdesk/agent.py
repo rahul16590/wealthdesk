@@ -17,19 +17,30 @@ from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.graph import END, StateGraph
 
 from .config import CHECKPOINT_DB
-from .nodes import respond
+from .nodes import respond,escalate, classify, decline, route_query, retrieve_docs
 from .state import WealthDeskState
 
 
-def build_graph(checkpointer=None):
-    """Build and compile the WealthDesk LangGraph graph."""
+def build_graph(checkpointer = None):
+    # START -> Classify -> based on route_query decide next node to be executed.
     builder = StateGraph(WealthDeskState)
+    builder.add_node("classify", classify)
+    builder.add_node("decline", decline)
+    builder.add_node("escalate", escalate)
+    builder.add_node("retrieve_docs", retrieve_docs)
     builder.add_node("respond", respond)
-    builder.set_entry_point("respond")
-    builder.add_edge("respond", END)
 
-    if checkpointer is None:
-        checkpointer = MemorySaver()
+    builder.set_entry_point("classify") # START
+    builder.add_conditional_edges("classify", route_query, {
+        "retrieve_docs": "retrieve_docs",
+        "escalate": "escalate",
+        "decline": "decline"
+    })
+    builder.add_edge("retrieve_docs", "respond")
+    builder.add_edge("respond", END)
+    builder.add_edge("escalate", END)
+    builder.add_edge("decline", END)
+
 
     return builder.compile(checkpointer=checkpointer)
 
@@ -68,6 +79,14 @@ def run() -> None:
             {"customer_message": user_input, "response": ""},
             config=config,
         )
+        route = result.get("query_type", "?")
+        docs  = result.get("retrieved_docs", [])
+        print(f"\n[Routed: {route}]", end="")
+        if docs:
+            sources = {d.split("]\n")[0].lstrip("[") for d in docs if "]\n" in d}
+            print(f"  [Retrieved {len(docs)} chunk(s) from: {', '.join(sorted(sources))}]")
+        else:
+            print()
         print(f"\nWealthDesk: {result['response']}")
 
 
